@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body{font-family:Arial;background:#f4f4f9;margin:0;padding:0}
+        header{background:#0056b3; color:rgb(245, 242, 242); padding:15px;text-align:center;}
+        .container{max-width:800px;margin:30px auto;background:white;padding:20px;box-shadow:0 4px 8px rgba(0,0,0,.2);border-radius:10px}
+        h1{text-align:center;color:#f9f3f3}
+        table{width:100%;border-collapse:collapse;margin-top:20px}
+        th,td{border:1px solid #ddd;padding:10px;text-align:center}
+        th{background:#af4ca7;color:white}
+        tr:nth-child(odd){background:#f9f9f9}
+        tr:nth-child(even){background:#f1f1f1}
+        .edit-btn{background:#ffc107;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer}
+        .edit-btn:hover{background:#e0a800}
+        .delete-btn{background:#4CAF50;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer}
+        .delete-btn:hover{background:coral}
+        .navbar {
+            background-color: #007bff; 
+        }
+                  .navbar-nav .nav-link {
+            color: #fff !important; 
+            font-weight: bold; 
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: #0056b3; 
+            color: white !important; 
+        }
+        .navbar-nav .nav-item.active .nav-link {
+            background-color: #0056b3; 
+            color: white !important; 
+        }
+        ul.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px; 
+    list-style: none; 
+    padding: 0; 
+    margin: 0;
+}
+li.page-item {
+    border-radius: 4px; 
+    transition: background-color 0.3s ease; 
+}
+.page-link {
+    display: inline-block;
+    padding: 10px 15px; 
+    text-decoration: none; 
+    color: #007bff; 
+    font-weight: 600; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    transition: all 0.3s ease; 
+}
+.page-link:hover {
+    background-color: #007bff; 
+    color: #fff;
+    border-color: #007bff;
+}
+.page-item.active .page-link {
+    background-color: #007bff; 
+    color: #fff; 
+    border-color: #007bff; 
+}
+.page-item .page-link {
+    background-color: #e2e6ea; 
+    color: #007bff;
+}
+.page-item .page-link:hover {
+    background-color: #007bff; 
+    color: white; 
+}
+.pagination-container {
+    margin-top: 30px;
+}   
+button {
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px; 
+            transition: background-color 0.3s;
+}  
+    </style>
+</head>
+<body>
+    <header><h1>Student Information</h1></header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="Registration.html">Registration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="1A.HTML">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="2a.html">Student List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="3.html">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="q4.html">Achievements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="q5.html">Alumni</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container">
+
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Age</th><th>Semester</th><th>Reg No</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <tr>
+                    <td>Amit Kumar</td><td>19</td><td>3rd</td><td>REG12345</td>
+                    <td><button class="edit-btn" onclick="editRow(this)">Edit</button><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                </tr>
+                <tr>
+                    <td>Shiv Kumar</td><td>19</td><td>3rd</td><td>REG54321</td>
+                    <td><button class="edit-btn" onclick="editRow(this)">Edit</button><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                </tr>
+                <tr>
+                    <td>Shikha Kumari</td><td>19</td><td>3rd</td><td>REG25268</td>
+                    <td><button class="edit-btn" onclick="editRow(this)">Edit</button><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        function deleteRow(btn){btn.parentNode.parentNode.remove()}
+        function editRow(btn){
+            const row=btn.parentElement.parentElement;
+            const columns=['Name','Age','Semester','Reg No'];
+            for(let i=0;i<4;i++){
+                const newValue=prompt(`Enter ${columns[i]}:`,row.cells[i].textContent);
+                if(newValue) row.cells[i].textContent=newValue;
+            }
+        }
+        
+        function addStudent() {
+    const name = prompt("Enter student's name:");
+    const age = prompt("Enter student's age:");
+    const semester = prompt("Enter student's semester:");
+    const regNo = prompt("Enter student's registration number:");
+
+    if (name && age && semester && regNo) {
+        const table = document.getElementById("studentTableBody");
+        const newRow = table.insertRow();
+
+        newRow.innerHTML = `
+            <td>${name}</td>
+            <td>${age}</td>
+            <td>${semester}</td>
+            <td>${regNo}</td>
+            <td>
+                <button class="edit-btn" onclick="editRow(this)">Edit</button>
+                <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+            </td>
+        `;
+    }
+}
+
+
+    </script>
+    <button onclick="addStudent()">Add Student</button>
+    <nav>
+        <ul class="pagination justify-content-center">
+
+            <li class="nav-item active">
+                <li class="page-item">
+                <a class="page-link" href="Registration.html" target="_blank" >Registration</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="1A.HTML" target="_blank">Login</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="2a.html" target="_blank">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="3.html" target="_blank">3</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="q4.html" target="_blank">4</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="q5.html" target="_blank">5</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
