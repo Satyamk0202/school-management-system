@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>School Admission Portal - ABC School</title><meta name="description" content="Apply to ABC School for grades 1 to 12."><link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"><link href="style.css" rel="stylesheet"></head><body data-title="School Admission Portal"><div id="site-header"></div><main class="container my-4"><div class="form-card"><h2 class="h4">Admission process</h2>
+<p>Fill out the form. Our team will review your application and contact you. The school accepts grades 1 to 12.</p>
+<div id="msg" class="alert alert-success d-none" role="status"></div>
+<form id="admForm" novalidate>
+<div class="form-group"><label for="fullName">Full name</label><input class="form-control" id="fullName" name="fullName" required autocomplete="name"></div>
+<div class="form-group"><label for="gradeLevel">Grade level</label><select class="form-control" id="gradeLevel" name="gradeLevel" required><option value="">Select grade</option></select></div>
+<div class="form-group"><label for="dob">Date of birth</label><input type="date" class="form-control" id="dob" name="dob" required></div>
+<div class="form-group"><label for="address">Address</label><textarea class="form-control" id="address" name="address" rows="3" required autocomplete="street-address"></textarea></div>
+<div class="form-group"><label for="parentName">Parent/guardian name</label><input class="form-control" id="parentName" name="parentName" required></div>
+<div class="form-group"><label for="contactNumber">Parent/guardian phone</label><input type="tel" class="form-control" id="contactNumber" name="contactNumber" pattern="[0-9+\-\s]{8,15}" required autocomplete="tel"></div>
+<div class="form-group"><label for="email">Parent/guardian email</label><input type="email" class="form-control" id="email" name="email" required autocomplete="email"></div>
+<button class="btn btn-success btn-block" type="submit">Submit application</button></form></div></main><div id="site-footer"></div><script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script><script src="nav.js"></script><script>
+var ENDPOINT=""; /* Paste your Formspree/Getform/backend URL here to receive applications by email. */
+for(var i=1;i<=12;i++)$("#gradeLevel").append(new Option("Grade "+i,i));
+$("#dob").attr("max",new Date().toISOString().split("T")[0]);
+$("#admForm").on("submit",function(e){e.preventDefault();var f=this;f.classList.add("was-validated");
+if(!f.checkValidity()){$(f).find(":invalid").first().focus();return;}
+function ok(){$("#msg").removeClass("d-none").text("Application submitted. We will contact you soon.");f.reset();f.classList.remove("was-validated");window.scrollTo(0,0);}
+if(!ENDPOINT){ok();return;}
+$.ajax({url:ENDPOINT,method:"POST",data:$(f).serialize(),headers:{Accept:"application/json"}}).done(ok).fail(function(){alert("Could not submit. Please try again.");});});
+</script></body></html>
