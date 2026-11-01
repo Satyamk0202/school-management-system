@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Student List - ABC School</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"><link href="style.css" rel="stylesheet"></head><body data-title="Student List"><div id="site-header"></div>
+<main class="container my-4"><div class="form-card" style="max-width:1000px">
+<div class="d-flex flex-wrap justify-content-between mb-3"><div id="stats" class="text-muted" aria-live="polite"></div><button id="csv" class="btn btn-success btn-sm">Export CSV</button></div>
+<div class="table-responsive"><table class="table table-striped bg-white"><thead class="thead-dark"><tr id="head"></tr></thead><tbody id="rows"></tbody></table></div></div></main>
+<div id="site-footer"></div><script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script><script src="nav.js"></script>
+<script>
+var cols=[["roll","Roll"],["name","Name"],["grade","Class"],["gender","Gender"],["dob","Date of birth"],["parent","Parent"],["phone","Phone"],["email","Email"]],sort="roll",dir=1;
+function load(){try{return JSON.parse(localStorage.getItem("students"))||[]}catch(e){return[]}}
+cols.forEach(function(c){$("#head").append($("<th scope=col>").append($("<button class='btn btn-link text-white p-0 font-weight-bold'>").text(c[1]).on("click",function(){dir=sort===c[0]?-dir:1;sort=c[0];render()})))});
+function render(){var l=load().sort(function(a,b){return String(a[sort]).localeCompare(String(b[sort]),undefined,{numeric:true})*dir}),$b=$("#rows").empty();
+if(!l.length)$b.append($("<tr><td colspan=8 class='text-center text-muted py-4'>No students yet. <a href='registration.html'>Register one</a>.</td></tr>"));
+l.forEach(function(s){var $r=$("<tr>");cols.forEach(function(c){$r.append($("<td>").text(s[c[0]]||""))});$b.append($r)});
+var by={};l.forEach(function(s){by[s.grade]=(by[s.grade]||0)+1});
+$("#stats").text(l.length+" students"+(l.length?" | "+Object.keys(by).sort(function(a,b){return a-b}).map(function(k){return"Class "+k+": "+by[k]}).join(", "):""))}
+$("#csv").on("click",function(){var q=function(v){v=String(v||"");if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'};
+var out=[cols.map(function(c){return q(c[1])}).join(",")].concat(load().map(function(s){return cols.map(function(c){return q(s[c[0]])}).join(",")})).join("\n");
+var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([out],{type:"text/csv"}));a.download="students.csv";a.click()});
+render();
+</script></body></html>
