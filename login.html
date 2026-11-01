@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - ABC School</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+:root{--brand:#0b5ed7;--brand-dark:#084298}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--brand-dark),var(--brand))}
+.login-card{width:100%;max-width:400px;background:#fff;border-radius:14px;padding:2rem;box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.login-card h1{font-size:1.6rem;color:var(--brand-dark)}
+a:focus,button:focus,input:focus{outline:3px solid #ffbf47;outline-offset:2px}
+</style></head>
+<body>
+<main class="login-card">
+  <div class="text-center mb-4"><h1 class="mb-1">ABC School</h1><p class="text-muted mb-0">Sign in to your account</p></div>
+  <div id="msg" class="alert d-none" role="alert"></div>
+  <form id="loginForm" novalidate>
+    <div class="form-group"><label for="user">Username or email</label>
+      <input id="user" class="form-control" required autocomplete="username" autofocus></div>
+    <div class="form-group"><label for="pass">Password</label>
+      <div class="input-group"><input id="pass" type="password" class="form-control" required minlength="6" autocomplete="current-password">
+        <div class="input-group-append"><button type="button" id="toggle" class="btn btn-outline-secondary" aria-label="Show password" aria-pressed="false">Show</button></div></div>
+      <small id="caps" class="text-warning d-none">Caps Lock is on</small></div>
+    <div class="d-flex justify-content-between mb-3">
+      <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="remember"><label class="custom-control-label" for="remember">Remember me</label></div>
+      <a href="adm.html#help" id="forgot">Forgot password?</a></div>
+    <button id="go" class="btn btn-primary btn-block">Sign in</button>
+  </form>
+  <hr><p class="text-center small mb-0">New student? <a href="registration.html">Register</a> &middot; <a href="index.html">Back to home</a></p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+<script>
+/* AUTH_ENDPOINT: your server URL. It should accept POST {username,password} and return {"ok":true,"name":"..."} (set an HttpOnly cookie there).
+   Leave empty for DEMO mode: any credentials are accepted and nothing is protected. */
+var AUTH_ENDPOINT="", FAILS=0, LOCK_UNTIL=0;
+function show(t,c){$("#msg").attr("class","alert alert-"+c).text(t)}
+function done(name){
+  try{(($("#remember").is(":checked"))?localStorage:sessionStorage).setItem("user",name)}catch(e){}
+  show("Welcome, "+name+". Redirecting...","success");
+  setTimeout(function(){location.href="student-list.html"},800);
+}
+try{var saved=localStorage.getItem("user");if(saved)$("#user").val(saved)}catch(e){}
+$("#toggle").on("click",function(){var p=$("#pass"),h=p.attr("type")==="password";p.attr("type",h?"text":"password");$(this).text(h?"Hide":"Show").attr({"aria-pressed":h,"aria-label":h?"Hide password":"Show password"})});
+$("#pass").on("keyup keydown",function(e){$("#caps").toggleClass("d-none",!(e.originalEvent&&e.originalEvent.getModifierState&&e.originalEvent.getModifierState("CapsLock")))});
+$("#loginForm").on("submit",function(e){
+  e.preventDefault();
+  var u=$("#user").val().trim(),p=$("#pass").val();
+  if(Date.now()<LOCK_UNTIL){show("Too many attempts. Wait "+Math.ceil((LOCK_UNTIL-Date.now())/1000)+" seconds.","warning");return}
+  if(!u||!p){show("Enter your username and password.","danger");return}
+  if(p.length<6){show("Password must be at least 6 characters.","danger");return}
+  if(!AUTH_ENDPOINT){done(u);return}
+  $("#go").prop("disabled",true).text("Signing in...");
+  $.ajax({url:AUTH_ENDPOINT,method:"POST",contentType:"application/json",data:JSON.stringify({username:u,password:p}),xhrFields:{withCredentials:true}})
+   .done(function(r){if(r&&r.ok){done(r.name||u)}else{throw 0}})
+   .fail(function(){FAILS++;if(FAILS>=5){LOCK_UNTIL=Date.now()+30000;FAILS=0}show("Incorrect username or password.","danger")})
+   .always(function(){$("#go").prop("disabled",false).text("Sign in")});
+});
+if(!AUTH_ENDPOINT)$("#msg").attr("class","alert alert-warning small").text("Demo mode: any credentials work and nothing is protected.");
+</script>
+</body></html>
