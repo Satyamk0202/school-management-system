@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Search Students - ABC School</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"><link href="style.css" rel="stylesheet"></head><body data-title="Search Students"><div id="site-header"></div>
+<main class="container my-4"><div class="form-card" style="max-width:900px">
+<form id="q" class="form-row mb-3" role="search"><div class="col-md-6 mb-2"><label class="sr-only" for="term">Search</label><input id="term" class="form-control" type="search" placeholder="Search by name or roll number"></div>
+<div class="col-md-3 mb-2"><label class="sr-only" for="grade">Class</label><select id="grade" class="form-control"><option value="">All classes</option></select></div>
+<div class="col-md-3 mb-2"><a class="btn btn-outline-primary btn-block" href="registration.html">Add student</a></div></form>
+<p id="count" class="text-muted" aria-live="polite"></p>
+<div class="table-responsive"><table class="table table-striped table-hover bg-white"><thead class="thead-dark"><tr><th>Roll</th><th>Name</th><th>Class</th><th>Parent</th><th>Phone</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div></main>
+<div id="site-footer"></div><script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script><script src="nav.js"></script>
+<script>
+var KEY="students";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+for(var i=1;i<=12;i++)$("#grade").append(new Option("Class "+i,i));
+function render(){var t=$("#term").val().toLowerCase().trim(),g=$("#grade").val(),all=load();
+var r=all.filter(function(s){return(!g||s.grade===g)&&(!t||s.name.toLowerCase().indexOf(t)>-1||s.roll.toLowerCase().indexOf(t)>-1)});
+var $b=$("#rows").empty();
+if(!r.length){$b.append($("<tr>").append($("<td colspan=6 class='text-center text-muted py-4'>").text(all.length?"No students match your search.":"No students registered yet. Use Add student to begin.")))}
+r.forEach(function(s){$b.append($("<tr>").append($("<td>").text(s.roll),$("<td>").text(s.name),$("<td>").text(s.grade),$("<td>").text(s.parent),$("<td>").text(s.phone),
+$("<td>").append($("<button class='btn btn-sm btn-outline-danger'>").text("Delete").on("click",function(){if(confirm("Delete "+s.name+"?")){save(load().filter(function(x){return x.roll!==s.roll}));render()}}))))});
+$("#count").text(r.length+" of "+all.length+" students")}
+function save(l){localStorage.setItem(KEY,JSON.stringify(l))}
+$("#term,#grade").on("input change",render);$("#q").on("submit",function(e){e.preventDefault()});render();
+</script></body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Student Registration - ABC School</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"><link href="style.css" rel="stylesheet"></head><body data-title="Student Registration"><div id="site-header"></div>
+<main class="container my-4"><div class="form-card"><h2 class="h4">Register a student</h2>
+<div id="msg" class="alert d-none" role="status"></div>
+<form id="regForm" novalidate>
+<div class="form-group"><label for="name">Full name</label><input class="form-control" id="name" required autocomplete="name"></div>
+<div class="form-row"><div class="form-group col-sm-6"><label for="roll">Roll number</label><input class="form-control" id="roll" required></div>
+<div class="form-group col-sm-6"><label for="grade">Class</label><select class="form-control" id="grade" required><option value="">Select class</option></select></div></div>
+<div class="form-row"><div class="form-group col-sm-6"><label for="dob">Date of birth</label><input type="date" class="form-control" id="dob" required></div>
+<div class="form-group col-sm-6"><label for="gender">Gender</label><select class="form-control" id="gender" required><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></div></div>
+<div class="form-group"><label for="parent">Parent/guardian name</label><input class="form-control" id="parent" required></div>
+<div class="form-row"><div class="form-group col-sm-6"><label for="phone">Phone</label><input type="tel" class="form-control" id="phone" pattern="[0-9+\-\s]{8,15}" required autocomplete="tel"></div>
+<div class="form-group col-sm-6"><label for="email">Email</label><input type="email" class="form-control" id="email" required autocomplete="email"></div></div>
+<button class="btn btn-primary btn-block" type="submit">Register student</button>
+<a class="btn btn-link btn-block" href="search.html">Search registered students</a></form></div></main>
+<div id="site-footer"></div><script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script><script src="nav.js"></script>
+<script>
+/* Demo storage: records stay in this browser only. Replace save() with a server call for a real database. */
+var KEY="students";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+for(var i=1;i<=12;i++)$("#grade").append(new Option("Class "+i,i));
+$("#dob").attr("max",new Date().toISOString().split("T")[0]);
+function show(t,c){$("#msg").attr("class","alert alert-"+c).text(t)}
+$("#regForm").on("submit",function(e){e.preventDefault();var f=this;f.classList.add("was-validated");
+if(!f.checkValidity()){$(f).find(":invalid").first().focus();return}
+var list=load(),roll=$("#roll").val().trim();
+if(list.some(function(s){return s.roll.toLowerCase()===roll.toLowerCase()})){show("Roll number "+roll+" is already registered. Use a different roll number.","danger");return}
+list.push({name:$("#name").val().trim(),roll:roll,grade:$("#grade").val(),dob:$("#dob").val(),gender:$("#gender").val(),parent:$("#parent").val().trim(),phone:$("#phone").val().trim(),email:$("#email").val().trim()});
+try{localStorage.setItem(KEY,JSON.stringify(list))}catch(x){show("Could not save. Check that browser storage is enabled.","danger");return}
+show("Student registered.","success");f.reset();f.classList.remove("was-validated");window.scrollTo(0,0)});
+</script></body></html>
